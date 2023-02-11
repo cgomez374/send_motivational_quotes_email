@@ -1,5 +1,6 @@
 import smtplib
 import datetime as dt
+from random import choice
 
 # Global variables
 
@@ -12,7 +13,6 @@ quote = ''
 
 # Get the current day
 
-weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 current_day = dt.datetime.now().weekday()
 
 # Read quotes
@@ -31,13 +31,10 @@ except FileNotFoundError:
 # Choose the quote; if sent choose next quote in list
 
 not_used = True
-i = 0
 while not_used:
-    if quotes[i] not in quotes_sent:
-        quote = quotes[i]
+    quote = choice(quotes)
+    if quotes not in quotes_sent:
         not_used = False
-    else:
-        i += 1
 
 # Save the used quote to the used file
 
@@ -49,8 +46,9 @@ with open('./quotes_sent.txt', 'a') as file3:
 message = f'Subject: {TITLE}\n\n{quote}'
 
 # Send the message only on Fridays
+# Mon: 0 - Sun: 6
 
-if weekdays[current_day] == 'Friday':
+if current_day == 4:
     with smtplib.SMTP(GMAIL) as connection:
         connection.starttls()
         connection.login(user=EMAIL, password=PASSWORD)
